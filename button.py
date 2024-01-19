@@ -4,10 +4,10 @@ class button(pygame.sprite.Sprite):
     Class to manage the buttons.
     """
 
-    def __init__(self,imgSizeX,imgSizeY, hitBoxSizeX, hitBoxSizeY, img, x, y, function):
+    def __init__(self,imgSizeX,imgSizeY, hitBoxSizeW, hitBoxSizeH, img, x, y, function):
         super().__init__()
 
-        self.image = pygame.Surface([hitBoxSizeX, hitBoxSizeY],pygame.SRCALPHA)
+        self.image = pygame.Surface([imgSizeX, imgSizeY],pygame.SRCALPHA)
         self.rect = self.image.get_rect()
         self.img = pygame.image.load(img)
         self.rect.x = x
@@ -15,7 +15,7 @@ class button(pygame.sprite.Sprite):
         self.imgSizeX = imgSizeX
         self.imgSizeY = imgSizeY
         self.function = function
-        self.image.blit(self.img,(self.imgSizeX,self.imgSizeY));
+        self.image.blit(self.img,(0,0));  
 
 
 
