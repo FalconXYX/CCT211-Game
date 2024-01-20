@@ -14,12 +14,12 @@ class obstacle(pygame.sprite.Sprite):
         self.rect.y = y
         self.imgSizeX = imgSizeX
         self.imgSizeY = imgSizeY
-        self.image.blit(self.img,(self.imgSizeX,self.imgSizeY));
+        self.image.blit(self.img,(0,0));
 
 
         
-        
-    def move(self, speed):
+  
+    def update(self, speed):
         self.rect.y += speed
 
     
