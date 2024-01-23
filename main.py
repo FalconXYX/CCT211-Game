@@ -9,6 +9,8 @@ import obstacle
 MoveSpeed = 6
 global ScreenValue
 ScreenValue = "MainMenu"
+deathcount = 0
+death = False
 #CONSTANTS
 SCREENS = ["MainMenu","Game","Instructions", "GameOver"]
 LaneXList = [260, 465, 681]
@@ -18,15 +20,15 @@ CAR_Y = 495
 #IMAGES
 CarIMG = "Assets/car"+str(random.randint(1,3))+".png"
 Cactus1IMG = "Assets/cactus1.png"
-Cactus1IMGSize = (98,160)
+Cactus1IMGSize = (81,140)
 Cactus2IMG = "Assets/cactus2.png"
-Cactus2IMGSize = (106,190)
+Cactus2IMGSize = (78,158)
 BarricadeIMG = "Assets/barricade.png"
-BarricadeIMGSize = (131,70)
+BarricadeIMGSize = (131,65)
 greenShrubIMG = "Assets/greenShrub.png"
-greenShrubIMGSize = (135,107)
+greenShrubIMGSize = (119,85)
 purpleShrubIMG = "Assets/purpleShrub.png"
-purpleShrubIMGSize = (117,96)
+purpleShrubIMGSize = (96,71)
 BlankBackgroundIMG = "Assets/Blank-Background.png"
 BackgroundIMG = "Assets/Background.png"
 playButtonIMG = "Assets/play.png"
@@ -81,7 +83,7 @@ MainButtonGroup.add(InstructionButton)
 InstructionButtonGroup.add(BackButton)
 
 #SPRITES
-carDimensions = (107,216)
+carDimensions = (90,179)
 car = car.car(carDimensions[0],carDimensions[1],carDimensions[0],carDimensions[1],CarIMG,LaneXList[1],CAR_Y,0)
 carGroup = pygame.sprite.Group()
 carGroup.add(car)
@@ -115,7 +117,7 @@ def instructionsMenu(events):
     screen.blit(instructionsPage, (0,0)) 
     InstructionButtonGroup.draw(screen)
     InstructionButtonGroup.update(events)
-def gameVisuals(s,objGroup,d):
+def gameVisuals(s,objGroup,d,dc):
     global scroll
     #this code from here
     i = -1
@@ -128,15 +130,26 @@ def gameVisuals(s,objGroup,d):
     if abs(scroll) > blankbg.get_height(): 
         scroll = 0
     #to here is for the scrolling background  i made it using inspiration from the code found here https://www.geeksforgeeks.org/creating-a-scrolling-background-in-pygame/
+    #what heppens when  the car dies
     if d:
+
         text = font.render("Game Over", True, (0, 0, 0))
         text_rect = text.get_rect()
         text_rect.x = 500
         text_rect.y = 800
         screen.blit(text, text_rect)
         for car in carGroup:
-            car.death()
+                
+                animationstage  = dc// 10
+                print(animationstage)
+                car.setIMG("Assets/boom/boom"+str(animationstage)+".png")
+        carGroup.update(events, LaneXList)
         carGroup.draw(screen)
+        
+
+        
+        
+        objGroup.draw(screen)
         return
 
     carGroup.draw(screen)
@@ -148,9 +161,9 @@ def gameVisuals(s,objGroup,d):
     screen.blit(text, text_rect)
     objGroup.draw(screen)
     objGroup.update(MoveSpeed)
-    
+def gameOver():   
+    screen.blit(blankbg, (0,0)) 
 
-#scene Manager
     
 #MAIN LOOP
 
@@ -170,38 +183,32 @@ while True:
         mainMenu(events)
     elif ScreenValue == "Game":
         score += 1;
+        #this code generates the obstacles every OBJECT_FREQUENCY frames
         if score % OBJECT_FREQUENCY == 0:
             ob = generateObstacle(LaneXList)
             obstacleGroup.add(ob)
+        #this code increases the amount of objects every OBJECT_FREQUENCY_UP frames
         if score % OBJECT_FREQUENCY_UP == 0:
             OBJECT_FREQUENCY -=2
+        #checks if car has collided with obstacle
         collisions = pygame.sprite.groupcollide(carGroup, obstacleGroup, False, False)
-
-        death = False
-
         if collisions != {}:
             death = True
-        else:
-            pass
-
-        gameVisuals(score,obstacleGroup, death)
-        
         if death:
-            time.sleep(1)
+            deathcount += 1
+        if(deathcount ==1):
+            for car in carGroup:
+                car.death()
+        gameVisuals(score,obstacleGroup, death, deathcount)
+        if deathcount == 160:
+            time.sleep(0.1)
             ScreenValue = "GameOver"
-        
-        
-        
-
     elif ScreenValue == "Instructions":
-        
         instructionsMenu(events)
     elif ScreenValue == "GameOver":
-        pass
-        #gameOver()
+        gameOver()
     else:
         print("Screen not found")
-    #screen.blit(pygame.image.load(CarIMG),pygame.mouse.get_pos())
     pygame.display.flip()
              
        

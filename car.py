@@ -52,7 +52,9 @@ class car(pygame.sprite.Sprite):
             elif(direction == -1):
                 self.rect.x = laneXList[1]
                 self.lane = 0
+    def setIMG(self, img):
+        self.img = pygame.image.load(img)
+        self.image = pygame.Surface([192, 192],pygame.SRCALPHA)
+        self.image.blit(self.img,(0,0))
     def death(self):
-        self.img = pygame.image.load("Assets/boom.png")
-        self.image.blit(self.img,(0,0));
-    
+        self.rect.x-=50

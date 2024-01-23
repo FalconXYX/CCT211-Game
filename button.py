@@ -28,4 +28,5 @@ class button(pygame.sprite.Sprite):
     def click(self):
         if self.function:
             self.function()
-    
+
+print(160%1)
