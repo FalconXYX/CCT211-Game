@@ -35,6 +35,7 @@ playButtonIMG = "Assets/play.png"
 instructionsButtonIMG = "Assets/instructions.png" 
 instructionsPageIMG = "Assets/instructionsPage.png"
 backButtonIMG = "Assets/back.png"
+endScreenIMG = "Assets/endscreen.png"
 
 #FUNCTIONS
 def ShowInstuctions ():
@@ -103,6 +104,8 @@ screen = pygame.display.set_mode((FrameWidth,
 bg = pygame.image.load(BackgroundIMG).convert()
 instructionsPage = pygame.image.load(instructionsPageIMG).convert()
 blankbg = pygame.image.load(BlankBackgroundIMG).convert()
+endbg  = pygame.image.load("Assets/endscreen.png").convert()
+
 #Scene Functions
 scroll = 0
 score = 0
@@ -132,23 +135,16 @@ def gameVisuals(s,objGroup,d,dc):
     #to here is for the scrolling background  i made it using inspiration from the code found here https://www.geeksforgeeks.org/creating-a-scrolling-background-in-pygame/
     #what heppens when  the car dies
     if d:
-
         text = font.render("Game Over", True, (0, 0, 0))
         text_rect = text.get_rect()
         text_rect.x = 500
         text_rect.y = 800
         screen.blit(text, text_rect)
         for car in carGroup:
-                
                 animationstage  = dc// 10
-                print(animationstage)
                 car.setIMG("Assets/boom/boom"+str(animationstage)+".png")
         carGroup.update(events, LaneXList)
         carGroup.draw(screen)
-        
-
-        
-        
         objGroup.draw(screen)
         return
 
@@ -162,19 +158,11 @@ def gameVisuals(s,objGroup,d,dc):
     objGroup.draw(screen)
     objGroup.update(MoveSpeed)
 def gameOver():   
-    screen.blit(blankbg, (0,0)) 
-
-    
+    screen.blit(endbg, (0,0)) 
 #MAIN LOOP
-
 while True:
-    screen.fill((0, 0, 0))  # RGB values for black
-
-    # Update the display
-    
-    clock.tick(60)
-    #print(pygame.mouse.get_pos())  
-    
+    screen.fill((0, 0, 0))  # RGB values for black    
+    clock.tick(60)    
     events = pygame.event.get()
     for event in events: 
         if event.type == pygame.QUIT: 
