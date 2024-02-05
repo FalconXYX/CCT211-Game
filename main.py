@@ -32,6 +32,7 @@ purpleShrubIMGSize = (96,71)
 BlankBackgroundIMG = "Assets/Blank-Background.png"
 BackgroundIMG = "Assets/Background.png"
 playButtonIMG = "Assets/play.png"
+quitButtonIMG = "Assets/quit.png"
 instructionsButtonIMG = "Assets/instructions.png" 
 instructionsPageIMG = "Assets/instructionsPage.png"
 backButtonIMG = "Assets/back.png"
@@ -63,11 +64,17 @@ def generateObstacle(LaneXList):
         ob = obstacle.obstacle(purpleShrubIMGSize[0],purpleShrubIMGSize[1],purpleShrubIMGSize[0],purpleShrubIMGSize[1],purpleShrubIMG,LaneXList[lane+1],-100)
     
     return ob
-
+def quit():
+    pygame.quit()
+    exit()
 #BUTTONS
 playButtonPosition = (343,710)
 playButtonDimensions = (336,154)
 PlayButton = button.button(playButtonDimensions[0],playButtonDimensions[1],playButtonDimensions[0],playButtonDimensions[1],playButtonIMG,playButtonPosition[0],playButtonPosition[1],playGame)
+
+quitButtonPosition = (343,770)
+quitButtonDimensions = (335,86)
+QuitButton = button.button(quitButtonDimensions[0],quitButtonDimensions[1],quitButtonDimensions[0],quitButtonDimensions[1],quitButtonIMG,quitButtonPosition[0],quitButtonPosition[1],quit)
 
 instructionsButtonPosition = (5,779)
 instructionsButtonDimensions = (266,112)
@@ -82,6 +89,8 @@ InstructionButtonGroup = pygame.sprite.Group()
 MainButtonGroup.add(PlayButton)
 MainButtonGroup.add(InstructionButton)
 InstructionButtonGroup.add(BackButton)
+ExitButtonGroup = pygame.sprite.Group()
+ExitButtonGroup.add(QuitButton)
 
 #SPRITES
 carDimensions = (90,179)
@@ -96,6 +105,10 @@ clock = pygame.time.Clock()
 pygame.display.set_caption("Vroom") 
 font = pygame.font.Font(None, 36) 
 font.set_bold(True)
+title = pygame.font.Font(None, 56) 
+title.set_bold(True)
+heading = pygame.font.Font(None, 72)
+
 FrameHeight = 900
 FrameWidth = 1024
 screen = pygame.display.set_mode((FrameWidth, 
@@ -110,12 +123,9 @@ endbg  = pygame.image.load("Assets/endscreen.png").convert()
 scroll = 0
 score = 0
 def mainMenu(events):
-
     screen.blit(bg, (0,0)) 
     MainButtonGroup.draw(screen)
     MainButtonGroup.update(events)
-    
-
 def instructionsMenu(events):
     screen.blit(instructionsPage, (0,0)) 
     InstructionButtonGroup.draw(screen)
@@ -135,10 +145,10 @@ def gameVisuals(s,objGroup,d,dc):
     #to here is for the scrolling background  i made it using inspiration from the code found here https://www.geeksforgeeks.org/creating-a-scrolling-background-in-pygame/
     #what heppens when  the car dies
     if d:
-        text = font.render("Game Over", True, (0, 0, 0))
+        text = title.render("Game Over", True, (0, 0, 0))
         text_rect = text.get_rect()
-        text_rect.x = 500
-        text_rect.y = 800
+        text_rect.x = 410
+        text_rect.y = 300
         screen.blit(text, text_rect)
         for car in carGroup:
                 animationstage  = dc// 10
@@ -150,7 +160,7 @@ def gameVisuals(s,objGroup,d,dc):
 
     carGroup.draw(screen)
     carGroup.update(events, LaneXList)
-    text = font.render("Score: "+str(s), True, (0, 0, 0))  # RGB values for black
+    text = font.render("Score: "+str(s), True, (255, 255, 255))  # RGB values for black
     text_rect = text.get_rect()
     text_rect.x = 10
     text_rect.y = 10
@@ -159,6 +169,13 @@ def gameVisuals(s,objGroup,d,dc):
     objGroup.update(MoveSpeed)
 def gameOver():   
     screen.blit(endbg, (0,0)) 
+    ExitButtonGroup.draw(screen)
+    ExitButtonGroup.update(events)
+    text = heading.render(str(score), True, (255, 255, 255))
+    text_rect = text.get_rect()
+    text_rect.x = 520
+    text_rect.y = 710
+    screen.blit(text, text_rect)
 #MAIN LOOP
 while True:
     screen.fill((0, 0, 0))  # RGB values for black    
@@ -198,7 +215,4 @@ while True:
     else:
         print("Screen not found")
     pygame.display.flip()
-             
-       
-
 py.quit() 
