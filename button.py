@@ -29,4 +29,3 @@ class button(pygame.sprite.Sprite):
         if self.function:
             self.function()
 
-print(160%1)
