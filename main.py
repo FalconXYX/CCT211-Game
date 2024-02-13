@@ -1,4 +1,3 @@
-import math
 import time
 import pygame
 import random
@@ -11,7 +10,7 @@ LaneXList = [260, 465, 681]
 
 CAR_Y = 495
 #IMAGES
-#All assets were AI generated from Microsoft Copilot and then run through a pixel art filter in Adobe Photoshop 
+#All assets including music were AI generated from Microsoft Copilot and then run through a pixel art filter in Adobe Photoshop 
 
 CarIMG = "Assets/car"+str(random.randint(1,3))+".png"
 Cactus1IMG = "Assets/cactus1.png"
@@ -33,14 +32,11 @@ instructionsPageIMG = "Assets/instructionsPage.png"
 backButtonIMG = "Assets/back.png"
 endScreenIMG = "Assets/endscreen.png"
 
-
-
 #SPRITES
 carDimensions = (90,179)
 car = car.car(carDimensions[0],carDimensions[1],carDimensions[0],carDimensions[1],CarIMG,LaneXList[1],CAR_Y,0)
 carGroup = pygame.sprite.Group()
 carGroup.add(car)
-
 obstacleGroup = pygame.sprite.Group()
 #INITIALIZE PYGAME
 class game():
@@ -110,22 +106,17 @@ class game():
         # Scene Functions
         self.scroll = 0
         self.score = 0
-
     def ShowInstuctions(self):
         # Switch to the instructions screen
         self.ScreenValue = "Instructions"
-
     def playGame(self):
         # Start the game
         self.ScreenValue = "Game"
         #play music
         pygame.mixer.music.play(-1)
-
-
     def backToMain(self):
         # Return to the main menu
         self.ScreenValue = "MainMenu"
-
     def generateObstacle(self, LaneXList):
         # Generate a random obstacle and return it
         obstacleType = random.randint(1, 5)
@@ -147,18 +138,15 @@ class game():
                                    purpleShrubIMGSize[1], purpleShrubIMG, LaneXList[lane + 1], -100)
 
         return ob
-
     def quit(self):
         # Quit the game
         pygame.quit()
         exit()
-
     def mainMenu(self, events):
         # Display the main menu
         self.screen.blit(self.bg, (0, 0))
         self.MainButtonGroup.draw(self.screen)
         self.MainButtonGroup.update(events)
-
     def instructionsMenu(self):
         # Display the instructions menu
         self.screen.blit(self.instructionsPage, (0, 0))
