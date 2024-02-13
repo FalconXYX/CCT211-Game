@@ -11,6 +11,8 @@ LaneXList = [260, 465, 681]
 
 CAR_Y = 495
 #IMAGES
+#All assets were AI generated from Microsoft Copilot and then run through a pixel art filter in Adobe Photoshop 
+
 CarIMG = "Assets/car"+str(random.randint(1,3))+".png"
 Cactus1IMG = "Assets/cactus1.png"
 Cactus1IMGSize = (81,140)
@@ -31,7 +33,7 @@ instructionsPageIMG = "Assets/instructionsPage.png"
 backButtonIMG = "Assets/back.png"
 endScreenIMG = "Assets/endscreen.png"
 
-#FUNCTIONS
+
 
 #SPRITES
 carDimensions = (90,179)
@@ -43,12 +45,15 @@ obstacleGroup = pygame.sprite.Group()
 #INITIALIZE PYGAME
 class game():
     def __init__(self):
-        pygame.init() 
+        # Initialize pygame
+        pygame.init()
+
+        # Set up game attributes and resources
         self.clock = pygame.time.Clock()
-        pygame.display.set_caption("Vroom") 
-        self.font = pygame.font.Font(None, 36) 
+        pygame.display.set_caption("Vroom")
+        self.font = pygame.font.Font(None, 36)
         self.font.set_bold(True)
-        self.title = pygame.font.Font(None, 56) 
+        self.title = pygame.font.Font(None, 56)
         self.title.set_bold(True)
         self.heading = pygame.font.Font(None, 72)
         self.MoveSpeed = 6
@@ -59,75 +64,100 @@ class game():
         FrameHeight = 900
         FrameWidth = 1024
         self.events = 0
-        self.screen = pygame.display.set_mode((FrameWidth, 
-                                    FrameHeight)) 
-        # IMAGE 
+        self.screen = pygame.display.set_mode((FrameWidth, FrameHeight))
+
+        # Load images
         self.bg = pygame.image.load(BackgroundIMG).convert()
         self.instructionsPage = pygame.image.load(instructionsPageIMG).convert()
         self.blankbg = pygame.image.load(BlankBackgroundIMG).convert()
-        self.endbg  = pygame.image.load("Assets/endscreen.png").convert()
+        self.endbg = pygame.image.load("Assets/endscreen.png").convert()
         self.ScreenValue = "MainMenu"
-        self.ScreenValue = "MainMenu"
 
-        #BUTTONS
-        playButtonPosition = (343,710)
-        playButtonDimensions = (336,154)
-        PlayButton = button.button(playButtonDimensions[0],playButtonDimensions[1],playButtonDimensions[0],playButtonDimensions[1],playButtonIMG,playButtonPosition[0],playButtonPosition[1],self.playGame)
+        # BUTTONS
+        # Define button positions and dimensions
+        playButtonPosition = (343, 710)
+        playButtonDimensions = (336, 154)
+        quitButtonPosition = (343, 770)
+        quitButtonDimensions = (335, 86)
+        instructionsButtonPosition = (5, 779)
+        instructionsButtonDimensions = (266, 112)
+        backButtonPosition = (470, 787)
+        backButtonDimensions = (335, 86)
 
-        quitButtonPosition = (343,770)
-        quitButtonDimensions = (335,86)
-        QuitButton = button.button(quitButtonDimensions[0],quitButtonDimensions[1],quitButtonDimensions[0],quitButtonDimensions[1],quitButtonIMG,quitButtonPosition[0],quitButtonPosition[1],self.quit)
+        # Create button instances
+        PlayButton = button.button(playButtonDimensions[0], playButtonDimensions[1], playButtonDimensions[0],
+                                   playButtonDimensions[1], playButtonIMG, playButtonPosition[0], playButtonPosition[1], self.playGame)
+        QuitButton = button.button(quitButtonDimensions[0], quitButtonDimensions[1], quitButtonDimensions[0],
+                                   quitButtonDimensions[1], quitButtonIMG, quitButtonPosition[0], quitButtonPosition[1], self.quit)
+        InstructionButton = button.button(instructionsButtonDimensions[0], instructionsButtonDimensions[1],
+                                          instructionsButtonDimensions[0], instructionsButtonDimensions[1], instructionsButtonIMG,
+                                          instructionsButtonPosition[0], instructionsButtonPosition[1], self.ShowInstuctions)
+        BackButton = button.button(backButtonDimensions[0], backButtonDimensions[1], backButtonDimensions[0],
+                                   backButtonDimensions[1], backButtonIMG, backButtonPosition[0], backButtonPosition[1], self.backToMain)
 
-        instructionsButtonPosition = (5,779)
-        instructionsButtonDimensions = (266,112)
-        InstructionButton = button.button(instructionsButtonDimensions[0],instructionsButtonDimensions[1],instructionsButtonDimensions[0],instructionsButtonDimensions[1],instructionsButtonIMG,instructionsButtonPosition[0],instructionsButtonPosition[1],self.ShowInstuctions)
-
-        backButtonPosition = (470,787)
-        backButtonDimensions = (335,86)
-        BackButton = button.button(backButtonDimensions[0],backButtonDimensions[1],backButtonDimensions[0],backButtonDimensions[1],backButtonIMG,backButtonPosition[0],backButtonPosition[1],self.backToMain)
-
+        # Create button groups
         self.MainButtonGroup = pygame.sprite.Group()
         self.InstructionButtonGroup = pygame.sprite.Group()
+        self.ExitButtonGroup = pygame.sprite.Group()
+
+        # Add buttons to groups
         self.MainButtonGroup.add(PlayButton)
         self.MainButtonGroup.add(InstructionButton)
         self.InstructionButtonGroup.add(BackButton)
-        self.ExitButtonGroup = pygame.sprite.Group()
         self.ExitButtonGroup.add(QuitButton)
 
-
-        #Scene Functions
+        # Scene Functions
         self.scroll = 0
         self.score = 0
-    def ShowInstuctions (self):
+
+    def ShowInstuctions(self):
+        # Switch to the instructions screen
         self.ScreenValue = "Instructions"
+
     def playGame(self):
+        # Start the game
         self.ScreenValue = "Game"
+
     def backToMain(self):
+        # Return to the main menu
         self.ScreenValue = "MainMenu"
-    def generateObstacle(self,LaneXList):
-        obstacleType = random.randint(1,5)
-        lane = random.randint(-1,1)
+
+    def generateObstacle(self, LaneXList):
+        # Generate a random obstacle and return it
+        obstacleType = random.randint(1, 5)
+        lane = random.randint(-1, 1)
         if obstacleType == 1:
-            ob = obstacle.obstacle(Cactus1IMGSize[0],Cactus1IMGSize[1],Cactus1IMGSize[0],Cactus1IMGSize[1],Cactus1IMG,LaneXList[lane+1],-100)
+            ob = obstacle.obstacle(Cactus1IMGSize[0], Cactus1IMGSize[1], Cactus1IMGSize[0], Cactus1IMGSize[1],
+                                   Cactus1IMG, LaneXList[lane + 1], -100)
         elif obstacleType == 2:
-            ob = obstacle.obstacle(Cactus2IMGSize[0],Cactus2IMGSize[1],Cactus2IMGSize[0],Cactus2IMGSize[1],Cactus2IMG,LaneXList[lane+1],-100)
+            ob = obstacle.obstacle(Cactus2IMGSize[0], Cactus2IMGSize[1], Cactus2IMGSize[0], Cactus2IMGSize[1],
+                                   Cactus2IMG, LaneXList[lane + 1], -100)
         elif obstacleType == 3:
-            ob = obstacle.obstacle(BarricadeIMGSize[0],BarricadeIMGSize[1],BarricadeIMGSize[0],BarricadeIMGSize[1],BarricadeIMG,LaneXList[lane+1],-100)
+            ob = obstacle.obstacle(BarricadeIMGSize[0], BarricadeIMGSize[1], BarricadeIMGSize[0], BarricadeIMGSize[1],
+                                   BarricadeIMG, LaneXList[lane + 1], -100)
         elif obstacleType == 4:
-            ob = obstacle.obstacle(greenShrubIMGSize[0],greenShrubIMGSize[1],greenShrubIMGSize[0],greenShrubIMGSize[1],greenShrubIMG,LaneXList[lane+1],-100)
+            ob = obstacle.obstacle(greenShrubIMGSize[0], greenShrubIMGSize[1], greenShrubIMGSize[0], greenShrubIMGSize[1],
+                                   greenShrubIMG, LaneXList[lane + 1], -100)
         elif obstacleType == 5:
-            ob = obstacle.obstacle(purpleShrubIMGSize[0],purpleShrubIMGSize[1],purpleShrubIMGSize[0],purpleShrubIMGSize[1],purpleShrubIMG,LaneXList[lane+1],-100)
-        
+            ob = obstacle.obstacle(purpleShrubIMGSize[0], purpleShrubIMGSize[1], purpleShrubIMGSize[0],
+                                   purpleShrubIMGSize[1], purpleShrubIMG, LaneXList[lane + 1], -100)
+
         return ob
+
     def quit(self):
+        # Quit the game
         pygame.quit()
         exit()
+
     def mainMenu(self, events):
-        self.screen.blit(self.bg, (0,0)) 
+        # Display the main menu
+        self.screen.blit(self.bg, (0, 0))
         self.MainButtonGroup.draw(self.screen)
         self.MainButtonGroup.update(events)
+
     def instructionsMenu(self):
-        self.screen.blit(self.instructionsPage, (0,0)) 
+        # Display the instructions menu
+        self.screen.blit(self.instructionsPage, (0, 0))
         self.InstructionButtonGroup.draw(self.screen)
         self.InstructionButtonGroup.update(self.events)
     def gameVisuals(self,objGroup):
