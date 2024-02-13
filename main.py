@@ -65,7 +65,8 @@ class game():
         FrameWidth = 1024
         self.events = 0
         self.screen = pygame.display.set_mode((FrameWidth, FrameHeight))
-
+        pygame.mixer.init()
+        pygame.mixer.music.load("Assets/MidnightDrive.mp3")
         # Load images
         self.bg = pygame.image.load(BackgroundIMG).convert()
         self.instructionsPage = pygame.image.load(instructionsPageIMG).convert()
@@ -117,6 +118,9 @@ class game():
     def playGame(self):
         # Start the game
         self.ScreenValue = "Game"
+        #play music
+        pygame.mixer.music.play(-1)
+
 
     def backToMain(self):
         # Return to the main menu
@@ -173,6 +177,7 @@ class game():
             self.scroll = 0
         #to here is for the scrolling background  i made it using inspiration from the code found here https://www.geeksforgeeks.org/creating-a-scrolling-background-in-pygame/
         if self.death:
+            pygame.mixer.music.stop()
             text = self.title.render("Game Over", True, (0, 0, 0))
             text_rect = text.get_rect()
             text_rect.x = 410
